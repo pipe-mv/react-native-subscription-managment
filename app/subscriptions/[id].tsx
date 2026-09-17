@@ -1,15 +1,19 @@
 import { Link, useLocalSearchParams } from 'expo-router'
 import React from 'react'
-import { Text, View } from 'react-native'
+import { Text } from 'react-native'
+import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context'
+import {styled} from 'nativewind'
+
+const SafeAreaView = styled(RNSafeAreaView)
 
 const SubscriptionDetails = () => {
   const { id } = useLocalSearchParams<{ id: string }>()
 
   return (
-    <View>
+    <SafeAreaView>
       <Text>Subscription Details: {id}</Text>
       <Link href="/(tabs)/subscriptions">Back to Subscriptions</Link>
-    </View>
+    </SafeAreaView>
   )
 }
 
