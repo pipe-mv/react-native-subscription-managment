@@ -8,7 +8,7 @@ export const formatCurrency = (value: number, currency = "USD"): string => {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value);
-  } catch (error){
+  } catch{
 		//Fallback if currency code is invalid or formatting fails
     return value.toFixed(2);
   }
