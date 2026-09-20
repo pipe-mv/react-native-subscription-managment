@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "React_Native_Recurrly",
-    "slug": "React_Native_Recurrly",
+    "name": "Subscription Tracker",
+    "slug": "subscription-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "reactnativerecurrly",
+    "scheme": "subscriptiontracker",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -27,6 +27,7 @@
     },
     "plugins": [
       "expo-router",
+      "@clerk/expo",
       [
         "expo-splash-screen",
         {
@@ -53,7 +54,8 @@
             "./assets/fonts/Inter-Thin.ttf"
           ]
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,

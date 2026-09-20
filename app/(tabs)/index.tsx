@@ -43,7 +43,7 @@ export default function App() {
               </View>
             </View>
             <View className="mb-5">
-              <ListHeading title="Upcoming subscriptions" />
+              <ListHeading title="Upcoming Subscriptions" />
               <FlatList
                 data={UPCOMING_SUBSCRIPTIONS}
                 renderItem={({ item }) => <UpcomingSubscriptionCard {...item} />}
@@ -55,7 +55,7 @@ export default function App() {
                 }
               />
             </View>
-            <ListHeading title="All subscriptions" />
+            <ListHeading title="All Subscriptions" />
           </View>
         )}
         data={HOME_SUBSCRIPTIONS}
@@ -73,7 +73,7 @@ export default function App() {
         ItemSeparatorComponent={() => <View className="h-4"></View>}
         ListEmptyComponent={<Text className="home-empty-state ">No Subscriptions yet.</Text>}
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-20"
+        contentContainerClassName="pb-18"
       />
     </SafeAreaView>
   )
