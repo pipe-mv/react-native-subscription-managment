@@ -1,18 +1,26 @@
 import { tabs } from '@/constants/data'
 import { colors, components } from '@/constants/theme'
+import { useAuth } from '@clerk/expo'
 import clsx from 'clsx'
-import { Tabs } from 'expo-router'
+import { Redirect, Tabs } from 'expo-router'
 import { Image, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const tabBar = components.tabBar
 const TabLayout = () => {
+  const { isLoaded, isSignedIn } = useAuth()
   const insets = useSafeAreaInsets()
+
+  //Wait for Authentication to load before rendering the tabs, otherwise it will flicker between the sign-in screen and the tabs
+  if (!isLoaded) return null
+
+  //Redirect to the sign-in screen if the user is not signed in
+  if (!isSignedIn) return <Redirect href="/(auth)/sing-in" />
   const TabIcon = ({ focused, icon }: TabIconProps) => {
     return (
       <View className="tabs-icon">
         <View className={clsx('tabs-pill', focused && 'tabs-active')}>
-          <Image source={icon} className="tabs-glyph" resizeMode="contain"/>
+          <Image source={icon} className="tabs-glyph" resizeMode="contain" />
         </View>
       </View>
     )
@@ -36,11 +44,11 @@ const TabLayout = () => {
         tabBarItemStyle: {
           paddingVertical: tabBar.height / 2 - tabBar.iconFrame / 1.6,
         },
-				tabBarIconStyle: {
-					width: tabBar.iconFrame,
-					height: tabBar.iconFrame,
-					alignItems: 'center',
-				}
+        tabBarIconStyle: {
+          width: tabBar.iconFrame,
+          height: tabBar.iconFrame,
+          alignItems: 'center',
+        },
       }}
     >
       {tabs.map((tab) => (
