@@ -4,20 +4,21 @@ import { FlatList, Text, TextInput, View } from 'react-native'
 import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context'
 import {styled} from 'nativewind'
 import SubscriptionCard from '../../Components/SubscriptionCard'
-import { HOME_SUBSCRIPTIONS } from '../../constants/data'
 import { posthog } from '../../lib/posthog'
+import { useSubscriptions } from '../../lib/subscriptions'
 
 const SafeAreaView = styled(RNSafeAreaView)
 
 const Subscriptions = () => {
 	const [searchQuery, setSearchQuery] = useState('')
 	const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<string | null>(null)
+	const { subscriptions } = useSubscriptions()
 
 	const filteredSubscriptions = useMemo(() => {
 		const query = searchQuery.trim().toLowerCase()
-		if (!query) return HOME_SUBSCRIPTIONS
+		if (!query) return subscriptions
 
-		return HOME_SUBSCRIPTIONS.filter((subscription) =>
+		return subscriptions.filter((subscription) =>
 			[
 				subscription.name,
 				subscription.plan,
@@ -28,7 +29,7 @@ const Subscriptions = () => {
 				.filter(Boolean)
 				.some((value) => value?.toLowerCase().includes(query)),
 		)
-	}, [searchQuery])
+	}, [searchQuery, subscriptions])
 
 	return (
 		<SafeAreaView className= "flex-1 bg-background p-5">
@@ -55,7 +56,7 @@ const Subscriptions = () => {
 					<View className="mb-5">
 						<Text className="mb-2 text-3xl font-sans-bold text-primary">Subscriptions</Text>
 						<Text className="mb-5 text-sm font-sans-medium text-muted-foreground">
-							{filteredSubscriptions.length} of {HOME_SUBSCRIPTIONS.length} subscriptions
+							{filteredSubscriptions.length} of {subscriptions.length} subscriptions
 						</Text>
 						<TextInput
 							value={searchQuery}
