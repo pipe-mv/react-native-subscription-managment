@@ -15,6 +15,7 @@ import {
 } from '../../constants/data'
 import { icons } from '../../constants/icons'
 import images from '../../constants/images'
+import { posthog } from '../../lib/posthog'
 import { formatCurrency } from '../../lib/utils'
 
 const SafeAreaView = styled(RNSafeAreaView)
@@ -64,9 +65,11 @@ export default function App() {
           <SubscriptionCard
             {...item}
             expanded={expandedSubscriptionId === item.id}
-            onPress={() =>
-              setExpandedSubscriptionId((currentId) => (currentId === item.id ? null : item.id))
-            }
+            onPress={() => {
+              const expanded = expandedSubscriptionId !== item.id
+              setExpandedSubscriptionId(expanded ? item.id : null)
+              posthog?.capture('subscription_card_toggled', { expanded })
+            }}
           />
         )}
         extraData={expandedSubscriptionId}

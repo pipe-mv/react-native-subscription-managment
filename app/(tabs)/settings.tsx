@@ -1,4 +1,5 @@
 import { useClerk, useUser } from '@clerk/expo'
+import { posthog } from '@/lib/posthog'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { SafeAreaView as RNSafeAreaView } from 'react-native-safe-area-context'
@@ -10,6 +11,12 @@ const Settings = () => {
 	const { user } = useUser()
 	const { signOut } = useClerk()
 
+	const handleSignOut = async () => {
+		posthog?.capture('signed_out')
+		await signOut()
+		posthog?.reset()
+	}
+
 	return (
 		<SafeAreaView className= "flex-1 bg-background p-5">
 			<Text style={styles.title}>Account</Text>
@@ -17,7 +24,7 @@ const Settings = () => {
 				<View style={styles.avatar}><Text style={styles.avatarText}>{user?.firstName?.charAt(0) ?? user?.primaryEmailAddress?.emailAddress.charAt(0)?.toUpperCase() ?? 'R'}</Text></View>
 				<View><Text style={styles.name}>{user?.fullName || 'Subscription Tracker member'}</Text><Text style={styles.email}>{user?.primaryEmailAddress?.emailAddress}</Text></View>
 			</View>
-			<Pressable onPress={() => signOut()} style={styles.signOut}><Text style={styles.signOutText}>Sign out</Text></Pressable>
+			<Pressable onPress={handleSignOut} style={styles.signOut}><Text style={styles.signOutText}>Sign out</Text></Pressable>
 		</SafeAreaView>
 	)
 }
