@@ -5,6 +5,7 @@ import { SplashScreen, Stack } from 'expo-router'
 import { useEffect, useRef } from 'react'
 
 import { posthog } from '@/lib/posthog'
+import { SubscriptionsProvider } from '@/lib/subscriptions'
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY ?? ''
 
@@ -19,7 +20,9 @@ SplashScreen.preventAutoHideAsync()
 export default function RootLayout() {
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-      <RootLayoutContent />
+      <SubscriptionsProvider>
+        <RootLayoutContent />
+      </SubscriptionsProvider>
     </ClerkProvider>
   )
 }
