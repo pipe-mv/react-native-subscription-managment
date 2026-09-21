@@ -7,6 +7,8 @@ import { Link, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { Pressable, Text, TextInput, View } from 'react-native'
 
+import { posthog } from '@/lib/posthog'
+
 export default function SignIn() {
   const { signIn, errors, fetchStatus } = useSignIn()
   const router = useRouter()
@@ -26,6 +28,7 @@ export default function SignIn() {
     const { error } = await signIn.password({ emailAddress, password })
     if (error || signIn.status !== 'complete') return
     await signIn.finalize({ navigate: () => router.replace('/(tabs)') })
+    posthog?.capture('signed_in', { method: 'password' })
   }
 
   return (

@@ -7,6 +7,8 @@ import { Link, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { Pressable, Text, TextInput, View } from 'react-native'
 
+import { posthog } from '@/lib/posthog'
+
 export default function SignUp() {
   const { signUp, errors, fetchStatus } = useSignUp()
   const router = useRouter()
@@ -32,6 +34,7 @@ export default function SignUp() {
     const { error } = await signUp.verifications.verifyEmailCode({ code })
     if (error || signUp.status !== 'complete') return
     await signUp.finalize({ navigate: () => router.replace('/(tabs)') })
+    posthog?.capture('account_created')
   }
 
   return (

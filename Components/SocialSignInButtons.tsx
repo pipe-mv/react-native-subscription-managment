@@ -4,6 +4,8 @@ import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { Image, Pressable, Text, View } from 'react-native'
 
+import { posthog } from '@/lib/posthog'
+
 const providers = [
   {
     label: 'Google',
@@ -32,6 +34,7 @@ export function SocialSignInButtons() {
       if (createdSessionId && setActive) {
         await setActive({ session: createdSessionId })
         router.replace('/(tabs)')
+        posthog?.capture('sso_signed_in', { method: strategy })
       }
     } catch {
       setError('We could not complete that sign-in. Please try again.')

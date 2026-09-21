@@ -1,8 +1,10 @@
-import { ClerkProvider, useAuth } from '@clerk/expo'
+import { ClerkProvider, useAuth, useUser } from '@clerk/expo'
 import { tokenCache } from '@clerk/expo/token-cache'
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+
+import { posthog } from '@/lib/posthog'
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY ?? ''
 
@@ -34,6 +36,30 @@ function RootLayoutContent() {
     // 'sans-Thin': require('./assets/fonts/PlusJakartaSans-Thin.ttf'),
   })
   const { isLoaded: authLoaded } = useAuth()
+  const { isLoaded: userLoaded, user } = useUser()
+  const identifiedUserId = useRef<string | undefined>(undefined)
+
+  useEffect(() => {
+    if (!userLoaded) return
+
+    if (!user?.id) {
+      identifiedUserId.current = undefined
+      return
+    }
+
+    if (identifiedUserId.current === user.id) return
+
+    const email = user.primaryEmailAddress?.emailAddress
+    const name = user.fullName
+
+    posthog?.identify(user.id, {
+      $set: {
+        ...(email ? { email } : {}),
+        ...(name ? { name } : {}),
+      },
+    })
+    identifiedUserId.current = user.id
+  }, [user, userLoaded])
 
   useEffect(() => {
     if (fontsLoaded && authLoaded) {
